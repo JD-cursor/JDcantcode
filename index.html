@@ -52,7 +52,7 @@
             const email = document.getElementById('email').value;
             
             // Replace this URL with your Google Apps Script web app URL
-            const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbw_RIk0H9RKhuF2dNr1UhyZbpMKP-XqliBp6wO-_mo99V7-cAm2aMCpdWdrzyrqe76z/exec';
 
             fetch(scriptURL, { method: 'POST', body: JSON.stringify({ email: email }) })
                 .then(response => {
