@@ -54,15 +54,29 @@
             // Replace this URL with your Google Apps Script web app URL
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyjfNo1e5OTG-Uf_aVvJQKTYzfNmxG12wtErqFAvsRDJ3FHg8QsHtdQC9Hp2-8HWswU/exec';
 
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({ email: email }) })
-                .then(response => {
-                    result.innerHTML = 'Thanks! We\'ll keep you updated.';
-                    form.reset();
-                })
-                .catch(error => {
-                    result.innerHTML = 'Oops! Something went wrong.';
-                    console.error('Error!', error.message);
-                });
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: JSON.stringify({ email: email }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                result.innerHTML = 'Thanks! We\'ll keep you updated.';
+                form.reset();
+            })
+            .catch(error => {
+                result.innerHTML = 'Oops! Something went wrong.';
+                console.error('Error!', error.message);
+            });
         });
     </script>
 </body>
