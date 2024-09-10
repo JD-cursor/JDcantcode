@@ -3,9 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
+    <title>Coming Soon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="email"] {
+            padding: 10px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Test GIT 4.0!</h1>
+    <div class="container">
+        <h1>Coming Soon!</h1>
+        <p>Stay tuned for something amazing. Sign up to be notified when we launch.</p>
+        <form id="email-form">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <button type="submit">Notify Me</button>
+        </form>
+        <p id="result"></p>
+    </div>
+    <script>
+        const form = document.getElementById('email-form');
+        const result = document.getElementById('result');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            
+            // Replace this URL with your Google Apps Script web app URL
+            const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
+            fetch(scriptURL, { method: 'POST', body: JSON.stringify({ email: email }) })
+                .then(response => {
+                    result.innerHTML = 'Thanks! We\'ll keep you updated.';
+                    form.reset();
+                })
+                .catch(error => {
+                    result.innerHTML = 'Oops! Something went wrong.';
+                    console.error('Error!', error.message);
+                });
+        });
+    </script>
 </body>
 </html>
