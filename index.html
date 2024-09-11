@@ -52,26 +52,31 @@
             const email = document.getElementById('email').value;
             
             // Replace this URL with your new Google Apps Script web app URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzBE4Wo7SDETYH4P1gDKJwMbLAUtwa_mwRjrWO-fcnR9m4AEF4MFh5m8T6-WUjEykmq/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzg2-ip1uDJM2hDOowq6Lbd8tT_YRJsaMCetBbvsNYkonyHX97YB4uQ9pj2ecpDEP6a/exec';
 
-            fetch(scriptURL, { 
-                method: 'POST', 
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email })
-            })
-            .then(response => response.json())
-            .then(data => {
+            // Create a unique callback name
+            const callbackName = 'jsonpCallback_' + Date.now();
+
+            // Create script element
+            const script = document.createElement('script');
+            script.src = `${scriptURL}?callback=${callbackName}&email=${encodeURIComponent(email)}`;
+
+            // Define the callback function
+            window[callbackName] = function(data) {
                 console.log(data);
-                result.innerHTML = 'Thanks! We\'ll keep you updated.';
-                form.reset();
-            })
-            .catch(error => {
-                result.innerHTML = 'Oops! Something went wrong.';
-                console.error('Error!', error.message);
-            });
+                if (data.result === "success") {
+                    result.innerHTML = 'Thanks! We\'ll keep you updated.';
+                    form.reset();
+                } else {
+                    result.innerHTML = 'Oops! Something went wrong.';
+                }
+                // Clean up
+                delete window[callbackName];
+                document.body.removeChild(script);
+            };
+
+            // Add script to the document
+            document.body.appendChild(script);
         });
     </script>
 </body>
