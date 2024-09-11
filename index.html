@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon</title>
+    <title>Flight Information</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,11 +16,18 @@
         }
         .container {
             text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 20px;
         }
-        input[type="email"] {
+        input {
             padding: 10px;
             width: 200px;
         }
@@ -30,42 +37,47 @@
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Coming Soon!</h1>
-        <p>Stay tuned for something amazing. Sign up to be notified when we launch.</p>
-        <form id="email-form">
-            <input type="email" id="email" placeholder="Enter your email" required>
-            <button type="submit">Notify Me</button>
+        <h1>Flight Information</h1>
+        <p>Please enter your flight details below.</p>
+        <form id="flight-form">
+            <input type="text" id="flightNumber" placeholder="Flight Number" required>
+            <input type="text" id="originAirport" placeholder="Origin Airport" required>
+            <input type="text" id="destinationAirport" placeholder="Destination Airport" required>
+            <button type="submit">Submit</button>
         </form>
         <p id="result"></p>
     </div>
     <script>
-        const form = document.getElementById('email-form');
+        const form = document.getElementById('flight-form');
         const result = document.getElementById('result');
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
+            const flightNumber = document.getElementById('flightNumber').value;
+            const originAirport = document.getElementById('originAirport').value;
+            const destinationAirport = document.getElementById('destinationAirport').value;
             
             // Replace this URL with your Google Apps Script web app URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyofbGHig4ogLvvIV6Ixp082wjOV7_wUryw7bt05sTbPpNEM3X7w15jQZ4L0pRFEpDY/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzlDGIBHLPVFgzDS_EA01rmAcCHthAX4Rtb262SDgaOV_zl1a_df4qzky3H8mkIkgSr/exec';
 
             // Create a unique callback name
             const callbackName = 'jsonpCallback_' + Date.now();
 
             // Create script element
             const script = document.createElement('script');
-            script.src = `${scriptURL}?callback=${callbackName}&email=${encodeURIComponent(email)}`;
+            script.src = `${scriptURL}?callback=${callbackName}&flightNumber=${encodeURIComponent(flightNumber)}&originAirport=${encodeURIComponent(originAirport)}&destinationAirport=${encodeURIComponent(destinationAirport)}`;
 
             // Define the callback function
             window[callbackName] = function(data) {
                 console.log(data);
                 if (data.result === "success") {
-                    result.innerHTML = 'Thanks! We\'ll keep you updated.';
+                    result.innerHTML = 'Thank you! Your flight information has been submitted.';
                     form.reset();
                 } else {
                     result.innerHTML = 'Oops! Something went wrong.';
