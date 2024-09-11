@@ -51,32 +51,21 @@
             e.preventDefault();
             const email = document.getElementById('email').value;
             
-            // Replace this URL with your new Google Apps Script web app URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzg2-ip1uDJM2hDOowq6Lbd8tT_YRJsaMCetBbvsNYkonyHX97YB4uQ9pj2ecpDEP6a/exec';
+            // Replace this URL with your Google Apps Script web app URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwXXBnkDvUh8cCkhjF0OxOeaHfOQXb-Dj7fz4o5sdM0nTz0WNDNh9uD2BrAV4KKE14t/exec';
 
-            // Create a unique callback name
-            const callbackName = 'jsonpCallback_' + Date.now();
-
-            // Create script element
-            const script = document.createElement('script');
-            script.src = `${scriptURL}?callback=${callbackName}&email=${encodeURIComponent(email)}`;
-
-            // Define the callback function
-            window[callbackName] = function(data) {
-                console.log(data);
-                if (data.result === "success") {
-                    result.innerHTML = 'Thanks! We\'ll keep you updated.';
-                    form.reset();
-                } else {
-                    result.innerHTML = 'Oops! Something went wrong.';
-                }
-                // Clean up
-                delete window[callbackName];
-                document.body.removeChild(script);
-            };
-
-            // Add script to the document
-            document.body.appendChild(script);
+            fetch(`${scriptURL}?email=${encodeURIComponent(email)}`, { 
+                method: 'GET', 
+                mode: 'no-cors'
+            })
+            .then(() => {
+                result.innerHTML = 'Thanks! We\'ll keep you updated.';
+                form.reset();
+            })
+            .catch(error => {
+                result.innerHTML = 'Oops! Something went wrong.';
+                console.error('Error!', error.message);
+            });
         });
     </script>
 </body>
