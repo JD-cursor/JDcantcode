@@ -62,13 +62,44 @@
         const form = document.getElementById('flight-form');
         const result = document.getElementById('result');
 
-        form.addEventListener('submit', e => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const flightNumber = document.getElementById('flightNumber').value;
+            const flightNumber = document.getElementById('flightNumber').value.trim();
 
-            // Placeholder for fetching flight information
-            result.innerHTML = `Fetching information for flight: ${flightNumber}`;
-            // Here you would call your API to get flight data
+            // Display a loading message
+            result.innerHTML = `Fetching information for flight: ${flightNumber}...`;
+
+            // Your API key from AviationStack
+            const API_KEY = '1b8d41d8fb02cb794332b1da3d23c951'; // Replace with your actual API key
+
+            // Build the API URL
+            const apiUrl = `http://api.aviationstack.com/v1/flights?access_key=${API_KEY}&flight_iata=${flightNumber}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.data && data.data.length > 0) {
+                    const flight = data.data[0]; // Get the first flight result
+
+                    // Display flight information
+                    result.innerHTML = `
+                        <h2>Flight Information</h2>
+                        <p><strong>Airline:</strong> ${flight.airline.name}</p>
+                        <p><strong>Flight Number:</strong> ${flight.flight.iata}</p>
+                        <p><strong>Departure Airport:</strong> ${flight.departure.airport} (${flight.departure.iata})</p>
+                        <p><strong>Arrival Airport:</strong> ${flight.arrival.airport} (${flight.arrival.iata})</p>
+                        <p><strong>Scheduled Departure:</strong> ${flight.departure.scheduled}</p>
+                        <p><strong>Scheduled Arrival:</strong> ${flight.arrival.scheduled}</p>
+                        <p><strong>Status:</strong> ${flight.flight_status}</p>
+                    `;
+                } else {
+                    result.innerHTML = 'No flight information found. Please check the flight number and try again.';
+                }
+            } catch (error) {
+                console.error('Error fetching flight data:', error);
+                result.innerHTML = 'An error occurred while fetching flight information. Please try again later.';
+            }
         });
     </script>
 </body>
