@@ -43,16 +43,17 @@
             border-radius: 4px;
             width: 100%; /* Make button take full width of the container */
         }
+        #result {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Flight Information</h1>
-        <p>Please enter your flight details below.</p>
+        <p>Please enter your flight number below.</p>
         <form id="flight-form">
             <input type="text" id="flightNumber" placeholder="Flight Number" required>
-            <input type="text" id="originAirport" placeholder="Origin Airport" required>
-            <input type="text" id="destinationAirport" placeholder="Destination Airport" required>
             <button type="submit">Submit</button>
         </form>
         <p id="result"></p>
@@ -64,35 +65,10 @@
         form.addEventListener('submit', e => {
             e.preventDefault();
             const flightNumber = document.getElementById('flightNumber').value;
-            const originAirport = document.getElementById('originAirport').value;
-            const destinationAirport = document.getElementById('destinationAirport').value;
-            
-            // Replace this URL with your Google Apps Script web app URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzlDGIBHLPVFgzDS_EA01rmAcCHthAX4Rtb262SDgaOV_zl1a_df4qzky3H8mkIkgSr/exec';
 
-            // Create a unique callback name
-            const callbackName = 'jsonpCallback_' + Date.now();
-
-            // Create script element
-            const script = document.createElement('script');
-            script.src = `${scriptURL}?callback=${callbackName}&flightNumber=${encodeURIComponent(flightNumber)}&originAirport=${encodeURIComponent(originAirport)}&destinationAirport=${encodeURIComponent(destinationAirport)}`;
-
-            // Define the callback function
-            window[callbackName] = function(data) {
-                console.log(data);
-                if (data.result === "success") {
-                    result.innerHTML = 'Thank you! Your flight information has been submitted.';
-                    form.reset();
-                } else {
-                    result.innerHTML = 'Oops! Something went wrong.';
-                }
-                // Clean up
-                delete window[callbackName];
-                document.body.removeChild(script);
-            };
-
-            // Add script to the document
-            document.body.appendChild(script);
+            // Placeholder for fetching flight information
+            result.innerHTML = `Fetching information for flight: ${flightNumber}`;
+            // Here you would call your API to get flight data
         });
     </script>
 </body>
